@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import './App.css';
 import contacts from './contacts.json';
 
-
-
 const allContacts = contacts;
 const firstFiveContacts = allContacts.slice(0, 5);
 
@@ -19,8 +17,24 @@ function App() {
     setCurrentContacts([...currentContacts, randomContact]);
   };
 
-  const sortByName = () => {console.log("sort by name")}
-  const sortByPopularity = () => {console.log("sort by popularity")}
+  const sortByName = () => {
+    const sortedContacts = [...currentContacts].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    setCurrentContacts(sortedContacts);
+  };
+
+  const sortByPopularity = () => {
+    const sortedContacts = [...currentContacts].sort(
+      (a, b) => b.popularity - a.popularity
+    );
+    setCurrentContacts(sortedContacts);
+  };
+
+  const handleDelete = (id) => {
+    const newContacts = currentContacts.filter((contact) => contact.id !== id);
+    setCurrentContacts(newContacts);
+  };
 
   return (
     <div>
@@ -37,6 +51,7 @@ function App() {
             <th>Popularity</th>
             <th>Won an Oscar</th>
             <th>Won an Emmy</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -44,14 +59,17 @@ function App() {
             <tr key={contact.id}>
               <td>{contact.name}</td>
               <td>
-                <img src={contact.pictureUrl} alt={contact.name} className="contactImage"/>
+                <img
+                  src={contact.pictureUrl}
+                  alt={contact.name}
+                  className="contactImage"
+                />
               </td>
               <td>{contact.popularity.toFixed(2)}</td>
+              <td>{contact.wonOscar ? <span>🏆</span> : null}</td>
+              <td>{contact.wonEmmy ? <span>🏆</span> : null}</td>
               <td>
-                {contact.wonOscar ? <span>PRIZE ICON HERE</span> : null}
-              </td>
-              <td>
-                {contact.wonEmmy ? <span>PRIZE ICON HERE</span> : null}
+                <button onClick={() => handleDelete(contact.id)}>Eliminar</button>
               </td>
             </tr>
           ))}
